@@ -19,39 +19,39 @@ const Home = () => {
 		// console.log("me estas dando click", urlSong)
 	}
 
-	//BOTON PLAY Y PAUSE CAMBIA AL DAR CLICK ----OK
-	// const pauseSong = () => {
-	// 	if (isPlaying) {
-	// 		playSong.current.pause();
-	// 	} else {
-	// 		playSong.current.play()
-	// 	}
-	// 	setIsPlaying(!isPlaying)
-	// }
-	
 	const pauseSong = () => {
-		// console.log (pausePlay)
 		if (isPlaying) {
 			playSong.current.pause();
-			pausePlay.current.innerHTML="PLAY"
 		} else {
 			playSong.current.play();
-			pausePlay.current.innerHTML="PAUSE"
 		}
-		setIsPlaying(!isPlaying)
 	}
-	previousSong
+
+	// previousSong
 
     useEffect(()=>{
         getSongsList()
+		if (playSong.current) {
+			playSong.current.addEventListener("play", () => {
+				setIsPlaying(true);
+			})
+			playSong.current.addEventListener("pause", () => {
+				setIsPlaying(false);
+			})
+			return () => {
+				playSong.current.removeEventListener("play", () => {
+					setIsPlaying(true)
+				})
+				playSong.current.removeEventListener("pause", () => {
+					setIsPlaying(false);
+				})
+			} 
+		}
     }, [])
 	
-	// click..la cancion se escuche
 	// boton la sgte cancion
 	//efect sound
-	//.current
 	
-
 	return (
 		<div className="text-center">
             <label>Lista de canciones</label>
@@ -61,13 +61,10 @@ const Home = () => {
 					// al dar click obtendre la url
 				))
 			}
-			{/* al dar click voy a reproducir la musica */}
 			<audio src="" ref={playSong}></audio>
-			<button onClick={previousSong}>PREVIOUS</button>
-			{/* <button onClick = {pauseSong}>{isPlaying ? 'Pause' : 'Play'}</button> */}
-			<button onClick = {pauseSong} ref={pausePlay}>PAUSE</button>
-			<button onClick={nextSong}>NEXT</button>
-			
+			<button >PREVIOUS</button>
+			<button onClick = {pauseSong} ref={pausePlay}>{isPlaying ? 'play' : 'pause'}</button>
+			<button >NEXT</button>
 		</div>
 	);
 };
