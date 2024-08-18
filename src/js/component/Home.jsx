@@ -14,9 +14,9 @@ const Home = () => {
 	};
 
 	const getUrlSong = (url) => {
-		console.log("soy la cancion",urlSong);
+		// console.log("soy la cancion:", url);
+		refAudio.current.src= (`https://playground.4geeks.com${url}`)
 		setUrlSong(url);
-		refAudio.current.src= (`https://playground.4geeks.com${urlSong}`)
 		refAudio.current.play();
 		// console.log("me estas dando click", urlSong)
 	}
@@ -58,7 +58,7 @@ const Home = () => {
 			} 
 		}
     }, [])
-	
+
 	return (
 		<div className="container-fluid p-0 w-100 bg-dark">
             <h3 className="bg-dark text-secondary text-center p-2">Songs List</h3>
