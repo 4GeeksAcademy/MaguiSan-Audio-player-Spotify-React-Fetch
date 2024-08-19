@@ -2,7 +2,7 @@ import React, {useState, useEffect, useRef} from "react";
 
 const Home = () => {
     const [songsList, setSongsList] = useState([])
-	const [urlSong, setUrlSong] = useState("")
+	// const [urlSong, setUrlSong] = useState("")
 	const [isPlaying, setIsPlaying] = useState(false)
 	const [songIndex, setSongIndex] = useState (0)
 	const refAudio = useRef()
@@ -16,7 +16,7 @@ const Home = () => {
 	const getUrlSong = (url) => {
 		// console.log("soy la cancion:", url);
 		refAudio.current.src= (`https://playground.4geeks.com${url}`)
-		setUrlSong(url);
+		// setUrlSong(url);
 		refAudio.current.play();
 		// console.log("me estas dando click", urlSong)
 	}
