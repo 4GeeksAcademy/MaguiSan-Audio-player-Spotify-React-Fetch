@@ -1,5 +1,6 @@
 import React, {useState, useEffect, useRef} from "react";
 
+//falta sincronizar el click de la lista con el boton next
 const Home = () => {
     const [songsList, setSongsList] = useState([])
 	// const [urlSong, setUrlSong] = useState("")
