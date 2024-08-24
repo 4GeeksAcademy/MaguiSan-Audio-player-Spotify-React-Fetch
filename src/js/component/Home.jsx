@@ -1,27 +1,21 @@
 import React, {useState, useEffect, useRef} from "react";
-
-//falta sincronizar el click de la lista con el boton next
 const Home = () => {
-    const [songsList, setSongsList] = useState([])
-	// const [urlSong, setUrlSong] = useState("")
-	const [isPlaying, setIsPlaying] = useState(false)
-	const [songIndex, setSongIndex] = useState (0)
-	const refAudio = useRef()
-
+    const [songsList, setSongsList] = useState([]);
+	const [isPlaying, setIsPlaying] = useState(false);
+	const [songIndex, setSongIndex] = useState (null); // Estado para la canción en reproducción por defecto
+	const refAudio = useRef();
     const getSongsList = () => {
 		fetch("https://playground.4geeks.com/sound/songs")
 		.then((response) => response.json())
-		.then((data) => setSongsList(data.songs))
+		.then((data) => {setSongsList(data.songs);
+			// console.log(data.songs);
+		});
 	};
-
 	const getUrlSong = (url) => {
-		// console.log("soy la cancion:", url);
-		refAudio.current.src= (`https://playground.4geeks.com${url}`)
-		// setUrlSong(url);
+		console.log("soy la cancion:", url);
+		refAudio.current.src= `https://playground.4geeks.com${url}`;
 		refAudio.current.play();
-		// console.log("me estas dando click", urlSong)
 	}
-
 	const pausePlay = () => {
 		if (isPlaying) {
 			refAudio.current.pause();
@@ -29,17 +23,20 @@ const Home = () => {
 			refAudio.current.play();
 		}
 	}
-
 	const previousSong = () => {
-		setSongIndex((prevIndex) => (prevIndex - 1 + songsList.length) % songsList.length);
-		getUrlSong(songsList[songIndex].url);
+		setSongIndex((prevIndex) => {
+			const newIndx = (prevIndex - 1 + songsList.length) % songsList.length;
+			getUrlSong(songsList[newIndx]?.url); // Usa el nuevo índice para obtener la canción correcta
+			return newIndx
+		});
 	};
-
 	const nextSong = () => {
-		setSongIndex((prevIndex) => (prevIndex + 1) % songsList.length);
-		getUrlSong(songsList[songIndex].url);
+		setSongIndex((prevIndex) => {
+		const newIndx= (prevIndex + 1) % songsList.length;
+		getUrlSong(songsList[newIndx]?.url);
+		return newIndx
+		});
 	};
-
     useEffect(()=>{
         getSongsList()
 		if (refAudio.current) {
@@ -59,20 +56,18 @@ const Home = () => {
 			} 
 		}
     }, [])
-
 	return (
 		<div className="container-fluid p-0 w-100 bg-dark">
-            <h3 className="bg-dark text-secondary text-center p-2">Songs List</h3>
+            <h3 className="bg-dark text-light fw-bold text-center p-2 sticky-top">Songs List</h3>
 			<ol className="list-group mh-100 list-group-flush">
 				{
 					songsList.map((item, index) => (
-						<li className="list-group-item list-group-item-action list-group-item-dark text-black fs-4" key={index} onClick={() => getUrlSong(item.url)}><span className="me-4">{item.id}</span> {item.name}</li>
+						<li key={index} className={`list-group-item list-group-item-action list-group-item-dark text-black fs-3 ${songIndex === index && isPlaying ? "bg-white" : ""}`} onClick={() => {getUrlSong(item.url); setSongIndex(index);}}><span className="pe-5"><b>{item.id}</b></span>{item.name}</li>
 					))
 				}
-				<li></li>
 			</ol>
 			<audio src="" ref={refAudio}></audio>
-			<div className="fixed-bottom bg-dark text-center p-2">
+			<div className="sticky-bottom bg-dark text-center p-2">
 				<div className="row g-1">
 					<div className="col-4 text-end pt-2">
 						<button className="rounded border-0 px-2 m-2" onClick={previousSong}><i className="fa-solid fa-caret-left fa-lg"></i></button>
